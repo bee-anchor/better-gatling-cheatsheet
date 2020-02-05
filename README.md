@@ -6,7 +6,7 @@ After using Gatling first hand for a while, it because clear that the documentat
 
 One of the trickier things to get your head around. 
 
-##### Creating functions that explicitly require values from the session
+#### Creating functions that explicitly require values from the session
 It can be unpleasant to just use the EL syntax, and rely on something being in the session already. Much better if you can make it clear when a request requires certain values from the session.
 After spending a day trying to pass in attributes from the session into functions I was using to make API calls, it finally clicked that you can't do that. Instead you have to pass in a function to get the value you need out of the session at the point it's needed by the request. E.g:
 
