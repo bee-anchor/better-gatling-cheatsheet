@@ -10,7 +10,7 @@ One of the trickier things to get your head around.
 It can be unpleasant to just use the EL syntax, and rely on something being in the session already. Much better if you can make it clear when a request requires certain values from the session.
 After spending a day trying to pass in attributes from the session into functions I was using to make API calls, it finally clicked that you can't do that. Instead you have to pass in a function to get the value you need out of the session at the point it's needed by the request. E.g:
 
-```
+```scala
 def apiRequest(pathValue: Expression[String]): HttpRequestBuilder =
     http("/path/:pathValue")
     .get(session => pathValue(session).map(x => s"/path/$x"))
@@ -25,7 +25,7 @@ val chain: ChainBuilder =
 ### Describe your users behaviour
 
 Most common imports needed:
-```
+```scala
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.core.Predef._
@@ -37,13 +37,13 @@ import scala.concurrent.duration._
 
 #### Base structures
 ##### exec
-```
+```scala
 val test: ChainBuilder =
     exec(http("Test").get("/"))
 ```
 ##### group
 ##### pause
-```
+```scala
 val test: ChainBuilder =
     pause(500 milliseconds, 1 second)
     .exec(http("Test").get("/"))
@@ -53,7 +53,7 @@ val test: ChainBuilder =
 
 #### Loops
 ##### repeat
-```
+```scala
 val test: ChainBuilder =
     exec(http("home").get("/"))
     .repeat(4)(exec(http("test").get("/test")))
@@ -74,7 +74,7 @@ val test: ChainBuilder =
 ##### doSwitch
 ##### doSwitchOrElse
 ##### randomSwitch
-```
+```scala
 val test: ChainBuilder =
     exec(http("home").get("/"))
     .randomSwitch(
@@ -188,41 +188,41 @@ val test: ChainBuilder =
 
 #### HTTP
 ##### http
-```
+```scala
 exec(http("home").get("/"))
 ```
 
 #### HTTP verb
 ##### get
-```
+```scala
 exec(http("home").get("/"))
 ```
 ##### post
-```
+```scala
 exec(http("home").post("/"))
 ```
 ##### put
-```
+```scala
 exec(http("home").put("/"))
 ```
 ##### delete
-```
+```scala
 exec(http("home").delete("/"))
 ```
 ##### head
-```
+```scala
 exec(http("home").head("/"))
 ```
 ##### patch
-```
+```scala
 exec(http("home").patch("/"))
 ```
 ##### options
-```
+```scala
 exec(http("home").options("/"))
 ```
 ##### httpRequest
-```
+```scala
 exec(http("home").httpRequest("GET", "/"))
 ```
 
