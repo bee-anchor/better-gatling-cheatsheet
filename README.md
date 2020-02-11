@@ -6,6 +6,19 @@ After using Gatling first hand for a while, it because clear that the documentat
 
 One of the trickier things to get your head around. 
 
+#### Inspecting the session
+
+Can at any point in a chain drop an `exec` in to print out the current session:
+
+```scala
+exec(
+    session => {
+        println(session)
+        session
+    }
+)
+```
+
 #### Creating functions that explicitly require values from the session
 It can be unpleasant to just use the EL syntax, and rely on something being in the session already. Much better if you can make it clear when a request requires certain values from the session.
 After spending a day trying to pass in attributes from the session into functions I was using to make API calls, it finally clicked that you can't do that. Instead you have to pass in a function to get the value you need out of the session at the point it's needed by the request. E.g:
@@ -17,6 +30,21 @@ def apiRequest(pathValue: Expression[String]): HttpRequestBuilder =
 
 val chain: ChainBuilder =
     exec(apiRequest(session => session("pathValue").as[String]))
+```
+
+If you don't know for sure the attribute will exist in the session, you need to handle it to avoid getting lots of errors with seem to crash Gatling.
+You can either use a `doIf` to check it exists before doing requests that use it:
+```scala
+doIf(_.contains("attribute")) {
+    exec(apiRequest(session("pathValue").as[String]))
+}
+```
+or get the session attribute via `validate`:
+```scala
+exec(apiRequest(session => session("pathValue").validate[String] match {
+    case Success(value) => value
+    case Failure(_) => "NOTFOUND"
+}))
 ```
 
 # Scenarios
@@ -42,6 +70,13 @@ val test: ChainBuilder =
     exec(http("Test").get("/"))
 ```
 ##### group
+```scala
+val test: ChainBuilder =
+    group("group name") {
+        exec(http("Test").get("/"))
+        .exec(http("Test2").get("/test"))
+    }
+```
 ##### pause
 ```scala
 val test: ChainBuilder =
